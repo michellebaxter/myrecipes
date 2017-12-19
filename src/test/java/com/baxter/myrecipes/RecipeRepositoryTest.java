@@ -45,6 +45,9 @@ public class RecipeRepositoryTest {
         } else {
             fail("Saved recipe " + savedRecipe.getId() + " could not be found.");
         }
+
+        // cleanup
+        recipeRepository.delete(recipe);
     }
 
     private void verifyRecipe(Recipe recipe) {

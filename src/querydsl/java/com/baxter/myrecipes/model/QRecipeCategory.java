@@ -26,7 +26,7 @@ public class QRecipeCategory extends EntityPathBase<RecipeCategory> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final NumberPath<Long> recipeId = createNumber("recipeId", Long.class);
+    public final QRecipe recipe;
 
     public QRecipeCategory(String variable) {
         this(RecipeCategory.class, forVariable(variable), INITS);
@@ -47,6 +47,7 @@ public class QRecipeCategory extends EntityPathBase<RecipeCategory> {
     public QRecipeCategory(Class<? extends RecipeCategory> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.category = inits.isInitialized("category") ? new QCategory(forProperty("category")) : null;
+        this.recipe = inits.isInitialized("recipe") ? new QRecipe(forProperty("recipe"), inits.get("recipe")) : null;
     }
 
 }

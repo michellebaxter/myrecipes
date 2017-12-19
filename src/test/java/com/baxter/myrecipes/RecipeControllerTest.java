@@ -34,7 +34,7 @@ public class RecipeControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private RecipeRepository repository;
+    private RecipeService recipeService;
 
     @Test
     public void testGetRecipes() throws Exception {
@@ -53,7 +53,7 @@ public class RecipeControllerTest {
                 .location(LOCATION)
                 .build();
         PageImpl<Recipe> page = new PageImpl<>(Collections.singletonList(recipe));
-        given(repository.findAll(any(com.querydsl.core.types.Predicate.class), any(Pageable.class))).willReturn(page);
+        given(recipeService.findAll(any(RecipeFilter.class), any(Pageable.class))).willReturn(page);
 
         mockMvc.perform(get("/recipes"))
                 .andDo(print())
