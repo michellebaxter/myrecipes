@@ -33,7 +33,8 @@ public class RecipeCategory {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
-    @Column(name = "recipe_id")
-    private Long recipeId;
+    @ManyToOne
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
+    private Recipe recipe;
 
 }

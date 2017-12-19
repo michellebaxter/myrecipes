@@ -1,10 +1,10 @@
 package com.baxter.myrecipes;
 
 import com.baxter.myrecipes.model.Recipe;
-import com.querydsl.core.BooleanBuilder;
-import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,21 +16,29 @@ import java.util.List;
 @RequestMapping("/recipes")
 public class RecipeController {
 
-    private RecipeRepository recipeRepository;
+    private static final int DEFAULT_PAGE_SIZE = 10000;
+    private static final String DEFAULT_SORT = "name";
 
-    public RecipeController(RecipeRepository recipeRepository) {
-        this.recipeRepository = recipeRepository;
+    private RecipeService recipeService;
+
+    public RecipeController(RecipeService recipeService) {
+        this.recipeService = recipeService;
     }
 
     @GetMapping
-    public List<Recipe> getRecipes() { // todo (mibaxter): add filter later
-        Page<Recipe> recipes = recipeRepository.findAll(new BooleanBuilder(), PageRequest.of(0, 10000));
+    public List<Recipe> getRecipes(RecipeFilter filter,
+                                   @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = DEFAULT_SORT,
+                                   direction = Sort.Direction.ASC)
+                                   final Pageable pageable) {
+        Page<Recipe> recipes = recipeService.findAll(filter, pageable);
         return recipes.getContent();
     }
 
     @GetMapping("{id}")
     public Recipe getRecipe(@PathVariable Long id) {
-        return recipeRepository.findById(id)
-                .orElseThrow(()-> new DataRetrievalFailureException("Could not find recipe with id " + id));
+        return recipeService.findById(id);
     }
+
+    //todo: post, put, delete
+    //todo: rating - attribute, entity, and filtering
 }
