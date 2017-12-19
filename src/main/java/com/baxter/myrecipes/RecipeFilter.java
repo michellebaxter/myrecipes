@@ -24,4 +24,5 @@ public class RecipeFilter {
     private Long ethnicityId;
     private List<Long> categoryIds;
     private String comments;
+    private Integer ratedAtLeast;
 }

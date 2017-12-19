@@ -34,6 +34,7 @@ public class RecipeRepositoryTest {
                 .month(Month.DECEMBER)
                 .year(YEAR)
                 .location(LOCATION)
+                .rating(1)
                 .build();
         Recipe savedRecipe = recipeRepository.save(recipe);
         assertThat(savedRecipe).isNotNull();
@@ -57,5 +58,6 @@ public class RecipeRepositoryTest {
         assertThat(recipe.getMonth()).isEqualTo(Month.DECEMBER);
         assertThat(recipe.getYear()).isEqualTo(YEAR);
         assertThat(recipe.getLocation()).isEqualTo(LOCATION);
+        assertThat(recipe.getRating()).isEqualTo(1);
     }
 }

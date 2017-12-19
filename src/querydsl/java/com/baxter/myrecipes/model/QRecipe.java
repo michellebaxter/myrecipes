@@ -40,6 +40,8 @@ public class QRecipe extends EntityPathBase<Recipe> {
 
     public final StringPath name = createString("name");
 
+    public final NumberPath<Integer> rating = createNumber("rating", Integer.class);
+
     public final QSource source;
 
     public final NumberPath<Integer> year = createNumber("year", Integer.class);

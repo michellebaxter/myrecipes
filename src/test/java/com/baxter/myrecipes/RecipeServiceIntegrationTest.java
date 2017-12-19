@@ -365,6 +365,119 @@ public class RecipeServiceIntegrationTest {
     }
 
     @Test
+    public void testFindByRatingSelected() {
+        Recipe recipe = Recipe.builder()
+                .name("A recipe")
+                .month(Month.JANUARY)
+                .year(1989)
+                .rating(5)
+                .build();
+        recipe = service.save(recipe);
+
+        Recipe recipe2 = Recipe.builder()
+                .name("Recipe Two")
+                .month(Month.JULY)
+                .year(1989)
+                .rating(4)
+                .build();
+        recipe2 = service.save(recipe2);
+
+        Recipe recipe3 = Recipe.builder()
+                .name("Recipe 3")
+                .month(Month.JULY)
+                .year(1988)
+                .build();
+        recipe3 = service.save(recipe3);
+
+        RecipeFilter filter = RecipeFilter.builder()
+                .ratedAtLeast(4)
+                .build();
+        Page<Recipe> recipePage = service.findAll(filter, PageRequest.of(0, 10, Sort.by("name")));
+
+        assertThat(recipePage.getTotalElements()).isEqualTo(2);
+        assertThat(recipePage.getContent().get(0).getId()).isEqualTo(recipe.getId());
+        assertThat(recipePage.getContent().get(1).getId()).isEqualTo(recipe2.getId());
+
+        service.delete(recipe.getId());
+        service.delete(recipe2.getId());
+        service.delete(recipe3.getId());
+    }
+
+    @Test
+    public void testFindByNoRating() {
+        Recipe recipe = Recipe.builder()
+                .name("A recipe")
+                .month(Month.JANUARY)
+                .year(1989)
+                .rating(5)
+                .build();
+        recipe = service.save(recipe);
+
+        Recipe recipe2 = Recipe.builder()
+                .name("Recipe Two")
+                .month(Month.JULY)
+                .year(1989)
+                .rating(4)
+                .build();
+        recipe2 = service.save(recipe2);
+
+        Recipe recipe3 = Recipe.builder()
+                .name("Recipe 3")
+                .month(Month.JULY)
+                .year(1988)
+                .build();
+        recipe3 = service.save(recipe3);
+
+        RecipeFilter filter = RecipeFilter.builder()
+                .ratedAtLeast(0)
+                .build();
+        Page<Recipe> recipePage = service.findAll(filter, PageRequest.of(0, 10));
+
+        assertThat(recipePage.getTotalElements()).isEqualTo(1);
+        assertThat(recipePage.getContent().get(0).getId()).isEqualTo(recipe3.getId());
+
+        service.delete(recipe.getId());
+        service.delete(recipe2.getId());
+        service.delete(recipe3.getId());
+    }
+
+    @Test
+    public void testFindByRatingNotSet() {
+        Recipe recipe = Recipe.builder()
+                .name("A recipe")
+                .month(Month.JANUARY)
+                .year(1989)
+                .rating(5)
+                .build();
+        recipe = service.save(recipe);
+
+        Recipe recipe2 = Recipe.builder()
+                .name("Recipe Two")
+                .month(Month.JULY)
+                .year(1989)
+                .rating(4)
+                .build();
+        recipe2 = service.save(recipe2);
+
+        Recipe recipe3 = Recipe.builder()
+                .name("Recipe 3")
+                .month(Month.JULY)
+                .year(1988)
+                .build();
+        recipe3 = service.save(recipe3);
+
+        RecipeFilter filter = RecipeFilter.builder()
+                .build();
+        Page<Recipe> recipePage = service.findAll(filter, PageRequest.of(0, 10));
+
+        assertThat(recipePage.getTotalElements()).isEqualTo(3);
+
+        service.delete(recipe.getId());
+        service.delete(recipe2.getId());
+        service.delete(recipe3.getId());
+    }
+
+    @Test
     public void testFindWithMultipleFilters() {
         Recipe recipe = Recipe.builder()
                 .name("A recipe")
@@ -409,6 +522,7 @@ public class RecipeServiceIntegrationTest {
                 .courseId(2L)
                 .year(1989)
                 .categoryIds(Collections.singletonList(2L))
+                .ratedAtLeast(0)
                 .build();
         Page<Recipe> recipePage = service.findAll(filter, PageRequest.of(0, 10, Sort.by("name")));
 

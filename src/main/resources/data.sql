@@ -48,3 +48,10 @@ INSERT INTO categories (id, description) VALUES (2, 'Healthy');
 INSERT INTO categories (id, description) VALUES (3, 'Make Ahead');
 INSERT INTO categories (id, description) VALUES (4, 'Easy');
 INSERT INTO categories (id, description) VALUES (5, 'Slow Cooker');
+
+INSERT INTO ratings (id, description) VALUES (1, 'No Rating');
+INSERT INTO ratings (id, description, numeric_value) VALUES (2, '1', 1);
+INSERT INTO ratings (id, description, numeric_value) VALUES (3, '2', 2);
+INSERT INTO ratings (id, description, numeric_value) VALUES (4, '3', 3);
+INSERT INTO ratings (id, description, numeric_value) VALUES (5, '4', 4);
+INSERT INTO ratings (id, description, numeric_value) VALUES (6, '5', 5);
