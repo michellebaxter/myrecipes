@@ -54,7 +54,7 @@ public class Recipe {
     private Month month;
 
     @Column(name = "year")
-    private int year;
+    private Integer year;
 
     @Column(name = "location")
     private String location;
@@ -73,5 +73,8 @@ public class Recipe {
 
     @Column(name = "comments")
     private String comments;
+
+    @Column(name = "rating")
+    private Integer rating;
 
 }

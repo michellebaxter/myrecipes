@@ -40,5 +40,4 @@ public class RecipeController {
     }
 
     //todo: post, put, delete
-    //todo: rating - attribute, entity, and filtering
 }

@@ -47,6 +47,9 @@ public class RecipeService {
                 builder.and(recipe.comments.containsIgnoreCase(filter.getComments()));
         builder = CollectionUtils.isEmpty(filter.getCategoryIds()) ? builder :
                 addCategoriesToBulder(builder, recipe, filter.getCategoryIds());
+        builder = filter.getRatedAtLeast() == null ? builder :
+                  (filter.getRatedAtLeast() == 0 ? builder.and(recipe.rating.isNull()) :
+                                                   builder.and(recipe.rating.goe(filter.getRatedAtLeast())));
         return builder;
     }
 

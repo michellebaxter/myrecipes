@@ -65,7 +65,7 @@ public class RecipeControllerTest {
                 .andExpect(jsonPath("$.[0].month", is(Month.DECEMBER.name())))
                 .andExpect(jsonPath("$.[0].year", is(YEAR)))
                 .andExpect(jsonPath("$.[0].location", is(LOCATION)))
-                .andExpect(jsonPath("$.[0].source",nullValue()))
+                .andExpect(jsonPath("$.[0].source", nullValue()))
                 .andExpect(jsonPath("$.[0].ethnicity", nullValue()))
                 .andExpect(jsonPath("$.[0].categories", nullValue()))
                 .andExpect(jsonPath("$.[0].course", nullValue()))

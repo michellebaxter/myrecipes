@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS recipes (
   location     VARCHAR(200),
   course_id    BIGINT,
   ethnicity_id BIGINT,
-  comments     VARCHAR(200)
+  comments     VARCHAR(200),
+  rating       INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS sources (
@@ -35,4 +36,10 @@ CREATE TABLE IF NOT EXISTS recipe_categories (
   id          BIGINT IDENTITY PRIMARY KEY,
   category_id BIGINT,
   recipe_id   BIGINT
+);
+
+CREATE TABLE IF NOT EXISTS ratings (
+  id            BIGINT IDENTITY PRIMARY KEY,
+  description   VARCHAR(32),
+  numeric_value INTEGER
 );

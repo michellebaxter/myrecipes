@@ -86,6 +86,20 @@ public class RecipeServiceTest {
     }
 
     @Test
+    public void testBuildPredicateWithRatingOnly() {
+        RecipeFilter filter = RecipeFilter.builder().ratedAtLeast(4).build();
+        Predicate predicate = service.buildPredicate(filter);
+        assertThat(predicate.toString(), equalTo("recipe.rating >= 4"));
+    }
+
+    @Test
+    public void testBuildPredicateWithNoRatingOnly() {
+        RecipeFilter filter = RecipeFilter.builder().ratedAtLeast(0).build();
+        Predicate predicate = service.buildPredicate(filter);
+        assertThat(predicate.toString(), equalTo("recipe.rating is null"));
+    }
+
+    @Test
     public void testBuildPredicateWithAllFilterFields() {
         RecipeFilter filter = RecipeFilter.builder()
                 .name("Chicken")
@@ -97,6 +111,7 @@ public class RecipeServiceTest {
                 .comments("grill")
                 .courseId(6L)
                 .categoryIds(Arrays.asList(3L, 4L))
+                .ratedAtLeast(3)
                 .build();
         Predicate builder = service.buildPredicate(filter);
         assertThat(builder.toString(), containsString("containsIc(recipe.name,Chicken)"));
@@ -109,5 +124,6 @@ public class RecipeServiceTest {
         assertThat(builder.toString(), containsString("recipe.course.id = 6"));
         assertThat(builder.toString(), containsString("category.id = 3 &&"));
         assertThat(builder.toString(), containsString("category.id = 4"));
+        assertThat(builder.toString(), containsString("recipe.rating >= 3"));
     }
 }
