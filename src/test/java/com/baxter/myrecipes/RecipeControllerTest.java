@@ -9,19 +9,23 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.Month;
 import java.util.Collections;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -70,6 +74,35 @@ public class RecipeControllerTest {
                 .andExpect(jsonPath("$.[0].categories", nullValue()))
                 .andExpect(jsonPath("$.[0].course", nullValue()))
         ;
+    }
+
+    @Test
+    public void testGetRecipe() throws Exception {
+        final long id = 1L;
+        Recipe recipe = Recipe.builder()
+                .id(id)
+                .build();
+        given(recipeService.findById(id)).willReturn(recipe);
+        mockMvc.perform(get("/recipes/1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is((int)id)));
+    }
+
+    @Test
+    public void testCreateRecipe() throws Exception {
+        final String recipeName = "Test Saving a Recipe";
+        Recipe savedRecipe = Recipe.builder()
+                .id(2L)
+                .name(recipeName)
+                .build();
+        given(recipeService.save(any(Recipe.class))).willReturn(savedRecipe);
+        mockMvc.perform(post("/recipes")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content("{ \"name\" : \"" + recipeName + "\" }"))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Location", equalTo("http://localhost/recipes/2")));
     }
 
 }
