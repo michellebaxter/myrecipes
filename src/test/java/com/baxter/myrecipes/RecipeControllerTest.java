@@ -23,6 +23,7 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -103,6 +104,26 @@ public class RecipeControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", equalTo("http://localhost/recipes/2")));
+    }
+
+    @Test
+    public void testUpdateRecipe() throws Exception {
+        final String recipeName = "Test Recipe";
+        final int rating = 4;
+        final long recipeId = 3L;
+        Recipe updatedRecipe = Recipe.builder()
+                .id(recipeId)
+                .name(recipeName)
+                .rating(rating)
+                .build();
+        given(recipeService.save(any(Recipe.class))).willReturn(updatedRecipe);
+        String body = "{ \"name\" : \"" + recipeName + "\", \"rating\" : " + rating + " }";
+        mockMvc.perform(put("/recipes/" + recipeId)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(body))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Location", equalTo("http://localhost/recipes/" + recipeId)));
     }
 
 }

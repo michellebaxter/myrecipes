@@ -555,4 +555,30 @@ public class RecipeServiceIntegrationTest {
 
         }
     }
+
+    @Test
+    public void testUpdate() {
+        Recipe recipe = Recipe.builder()
+                .name("Bechamel Sauce")
+                .month(Month.MARCH)
+                .year(2003)
+                .source(Source.builder().id(3L).build())
+                .build();
+        recipe = service.save(recipe);
+
+        recipe = service.findById(recipe.getId());
+        assertThat(recipe.getComments()).isNullOrEmpty();
+        assertThat(recipe.getRating()).isNull();
+
+        recipe.setComments("Overly complicated for not much taste");
+        recipe.setRating(3);
+
+        service.save(recipe);
+        recipe = service.findById(recipe.getId());
+
+        assertThat(recipe.getRating()).isEqualTo(3);
+        assertThat(recipe.getComments()).isEqualTo("Overly complicated for not much taste");
+
+        service.delete(recipe.getId());
+    }
 }
